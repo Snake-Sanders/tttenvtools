@@ -44,3 +44,7 @@ end
 def copy_dir(src_dir, dst_dir)
     FileUtils.cp_r(src_dir, dst_dir, :verbose => true)
 end
+
+def del_dir(dir_path)
+    FileUtils.remove_dir(dir_path)
+end

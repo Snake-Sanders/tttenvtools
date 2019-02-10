@@ -1,6 +1,7 @@
 *.DS_Store
 todo.md
+notes/
 templates/
 data/
-autobackup/
+_backup/
 out/

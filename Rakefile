@@ -30,13 +30,14 @@ end
 desc "clear directory"
 task :clear do
     puts "Deleting generated directories"
-    ``
+    del_dir("./out")
 end
 
 desc "Backs up all the src files by calling backup.rb"
 task :bkp do
-    `ruby #{SCRIPT_PATH}/backup.rb rb md json html rhtml`
-    puts "all backup"
+    extensions = "json rhtml"
+    `ruby #{SCRIPT_PATH}/backup.rb #{extensions}`
+    puts "all data backup: #{extensions}"
 end
 
 desc "Move Generated files to the web folder"

@@ -12,6 +12,7 @@
 
 require 'rubygems'
 require 'zip'
+require_relative 'helper'
 
 def gen_zip_file_name()
     timestamp = Time.now.strftime("%Y-%m-%d_%H.%M.%S")
@@ -26,8 +27,8 @@ if ARGV.length < 1
     exit 0
 end
 
-wrk_path        = "."
-out_folder      = "#{wrk_path}/autobackup"
+wrk_path        = File.dirname(File.expand_path('..', __FILE__))
+out_folder      = "#{wrk_path}/_backup"
 in_file_paths   = []
 
 ARGV.each do |file_extension|
@@ -38,10 +39,7 @@ in_file_paths  += Dir["#{wrk_path}/**/*.plantUml"]
 zip_file        = "#{out_folder}/#{gen_zip_file_name()}"
 
 puts "Preparing environment..."
-if not Dir.exist?(out_folder)
-    Dir.mkdir(out_folder)
-    puts "created folder #{out_folder}"
-end
+check_dir_exist(out_folder, true)
 
 Zip::File.open(zip_file, Zip::File::CREATE) do |zip|
     puts "Created #{zip_file}"
