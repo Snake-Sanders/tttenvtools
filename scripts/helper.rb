@@ -1,4 +1,6 @@
 
+require "fileutils"
+
 def check_dir_exist(path, shall_create=false)
     dir_exist = Dir.exist?(path)
     puts "Checking directory: #{path} ...#{ dir_exist ? "exist" : "does not exist" }"
@@ -37,4 +39,8 @@ def store_to_file( data, out_file )
     ensure
         file.close unless file.nil?
     end
+end
+
+def copy_dir(src_dir, dst_dir)
+    FileUtils.cp_r(src_dir, dst_dir, :verbose => true)
 end

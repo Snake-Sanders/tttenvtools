@@ -10,7 +10,7 @@
 
 require "erb"
 require "json"
-
+require "fileutils"
 require_relative "helper"
 
 
@@ -74,5 +74,20 @@ puts "Injecting the ptc documents list into the indext page: #{index_out}"
 erb = ERB.new(File.read("#{template_path}/index.rhtml"))
 gen_idx_page = erb.result
 store_to_file( gen_idx_page, index_out )
+
+# copy vendor files to web dir
+
+output_web_path ="#{output_path}/web"
+dst_js_dir      = "#{output_web_path}/js"
+dst_css_dir     = "#{output_web_path}/css"
+
+boostrap_dir = "#{PWD}/../vendor/bootstrap"
+copy_dir(File.join(boostrap_dir, "js")  , dst_js_dir)
+copy_dir(File.join(boostrap_dir, "css") , dst_css_dir)
+
+clipboar_dir = "#{PWD}/../vendor/clipboard/clipboard.min.js"
+FileUtils.copy_file(clipboar_dir , File.join(dst_js_dir, "clipboard.min.js"))
+
+
 
 
