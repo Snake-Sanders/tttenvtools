@@ -13,33 +13,36 @@ require "json"
 require "fileutils"
 require_relative "helper"
 
-
-READ_ONLY_DBG = false
-DBG = true
-DBG_SHOW_INPUT = false
+DBG             = true
+READ_ONLY_DBG   = false
+DBG_SHOW_INPUT  = true
 
 puts "Current working dir #{__dir__}" unless not DBG
 
 PWD = __dir__
 
 # raw data/json file containing ptc document IDs and descriptions
-json_file       = "#{PWD}/../data/ptc.json"
+ptc_json_file   = File.join( PWD, "..", "data" ,"ptc.json")
+
+# generated json file with the link for the notes html pages
+notes_json_file = File.join( PWD, "..", "gen" ,"notes.json")
 
 # dir location of the tamplates rhml files
-template_path   = "#{PWD}/../templates"
+template_path   = File.join( PWD, "..", "templates" )
 
 # dir location of the generated output files
-output_path     = "#{PWD}/../out"
+output_path     = File.join( PWD, "..", "out" )
 
 # file where the html output is stored
-out_file        = "#{output_path}/ptc.html"
+ptc_out_file    = File.join( output_path, "ptc.html")
+notes_out_file  = File.join( output_path, "notes.html")
 
 # make sure that the output folder is created
 check_dir_exist(output_path ,true)
 check_dir_exist(File.join(output_path, "web") ,true)
 
-puts "Reading data from json config file: #{json_file}"
-json = JSON.parse(File.open(json_file).read) # returns a hash
+puts "Reading data from json config file: #{ptc_json_file}"
+json = JSON.parse(File.open(ptc_json_file).read) # returns a hash
 
 puts "Loading projects:"
 projects = json.keys
@@ -60,12 +63,23 @@ if READ_ONLY_DBG then
     abort
 end
 
-puts "reading template config"
+puts "Reading ptc template config"
 
 # file where the json data previously read will be injected to
 erb = ERB.new(File.read("#{template_path}/ptc.rhtml"))
 gen_ptc_tables = erb.result
-store_to_file( gen_ptc_tables, out_file ) unless DBG
+store_to_file( gen_ptc_tables, ptc_out_file ) unless not DBG
+
+
+puts "Loading notes from projects:"
+notes_json = JSON.parse(File.open(notes_json_file).read) # returns a hash
+puts notes_json.to_s +  "that is all in json" unless not DBG
+notes_prj = notes_json.keys
+puts "project in notes " + notes_prj.to_s unless not DBG
+notes_erb = ERB.new(File.read("#{template_path}/notes.rhtml"))
+gen_notes_tables = notes_erb.result
+
+store_to_file( gen_notes_tables, notes_out_file ) unless not DBG
 
 index_out = "#{output_path}/web/index.html"
 puts "Injecting the ptc documents list into the indext page: #{index_out}"
@@ -77,7 +91,7 @@ store_to_file( gen_idx_page, index_out )
 
 # copy vendor files to web dir
 
-output_web_path ="#{output_path}/web"
+output_web_path = "#{output_path}/web"
 dst_js_dir      = "#{output_web_path}/js"
 dst_css_dir     = "#{output_web_path}/css"
 

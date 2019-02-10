@@ -7,7 +7,8 @@ def check_dir_exist(path, shall_create=false)
 
     if (not dir_exist) and shall_create then
         begin
-            Dir.mkdir(path)
+            # creates the whole path if non existing
+            FileUtils.mkdir_p(path)
             dir_exist = true
             puts "Created directory OK"
         rescue => exception

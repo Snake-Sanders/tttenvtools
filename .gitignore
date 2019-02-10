@@ -1,5 +1,6 @@
 *.DS_Store
 todo.md
+gen/
 notes/
 templates/
 data/
