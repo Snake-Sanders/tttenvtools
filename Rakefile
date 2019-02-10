@@ -9,8 +9,10 @@
     Version: 1.0 Creation
 =end
 
+require 'fileutils'
 require_relative "scripts/helper"
 
+PWD         = __dir__
 SCRIPT_PATH = "./scripts"
 
 task :default => :help
@@ -35,23 +37,49 @@ end
 
 desc "Backs up all the src files by calling backup.rb"
 task :bkp do
-    extensions = "json rhtml"
+    extensions = "json rhtml md"
     `ruby #{SCRIPT_PATH}/backup.rb #{extensions}`
     puts "all data backup: #{extensions}"
 end
 
-desc "Move Generated files to the web folder"
+desc "Move Generated html files to the web folder"
 task :mvgen do
-    NOTES_PATH  = "../notes/"
-    WEB_PATH    = "../web/"
+
+    NOTES_PATH  = File.join( PWD, "notes")
+    WEB_PATH    = File.join( PWD, "out","web", "notes")
+
     puts "Moving generated files to #{WEB_PATH}"
 
     if not check_dir_exist(NOTES_PATH) then
-        puts "The generated files folder was not found at:#{NOTES_PATH}. \nExiting"
         abort
     end
 
-    check_dir_exist(NOTES_PATH, true)
+    check_dir_exist(WEB_PATH, true)
 
+    file_extension = "html"
+    puts "searching for #{file_extension} files in " + NOTES_PATH
+
+    html_file_paths = []
+
+    # each subfolder is a project which contains similar pages:
+    # info.html, todo.html, architecture.html etc.
+    Dir.children(NOTES_PATH).each do |prj_dir|
+        file_paths = Dir["#{NOTES_PATH}/#{prj_dir}/**/*.#{file_extension}"]
+        if file_paths.size > 0 then
+            html_file_paths += [prj_dir , file_paths]
+            puts "Found #{file_paths.size} files in #{prj_dir}"
+            file_paths.each { |f| puts "- " + f }
+
+            puts "Copying files:"
+            file_paths.each do |file_path|
+                # replace the file name: append the project name to it.
+                # e.g.: project_file.html
+                new_file_name = "#{prj_dir}_" + File.basename(file_path)
+                dst_path = File.join(File.dirname(WEB_PATH), new_file_name)
+                puts "#{file_path}, #{dst_path}"
+                FileUtils.cp file_path, dst_path #, :verbose => true
+            end
+        end
+    end
 end
 

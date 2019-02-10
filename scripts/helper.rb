@@ -46,5 +46,12 @@ def copy_dir(src_dir, dst_dir)
 end
 
 def del_dir(dir_path)
-    FileUtils.remove_dir(dir_path)
+    begin
+        if check_dir_exist(dir_path) then
+            puts "Deleting directory: " + dir_path
+            FileUtils.remove_dir(dir_path)
+        end
+    rescue => exception
+        puts "Could not remove the directory:" + exception
+    end
 end
