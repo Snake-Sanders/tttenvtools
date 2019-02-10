@@ -1,7 +1,7 @@
 
 def check_dir_exist(path, shall_create=false)
-    puts "Checking directory: " + path
     dir_exist = Dir.exist?(path)
+    puts "Checking directory: #{path} ...#{ dir_exist ? "exist" : "does not exist" }"
 
     if (not dir_exist) and shall_create then
         begin
@@ -15,4 +15,26 @@ def check_dir_exist(path, shall_create=false)
     end
 
     return dir_exist
+end
+
+def store_to_file( data, out_file )
+
+    begin
+        puts "Saving #{data.size} bytes in #{out_file}"
+        file = nil
+
+        if File.exist?(out_file) then
+            file = File.open(out_file, 'w')
+        else
+            file = File.new(out_file, 'w')
+        end
+
+        file.write(data)
+        puts "File saved"
+    rescue IOError => e
+        puts "Error: Fail to save."
+        puts e
+    ensure
+        file.close unless file.nil?
+    end
 end

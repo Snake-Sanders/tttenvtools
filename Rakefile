@@ -9,7 +9,9 @@
     Version: 1.0 Creation
 =end
 
-require "./scripts/helper.rb"
+require_relative "scripts/helper"
+
+SCRIPT_PATH = "./scripts"
 
 task :default => :help
 
@@ -22,12 +24,18 @@ end
 desc "Generate html from json by calling erb-parser.rb"
 task :genptc do
     puts "Generating html with PTC items"
-    `ruby erb-parser.rb`
+    `ruby #{SCRIPT_PATH}/erb-parser.rb`
+end
+
+desc "clear directory"
+task :clear do
+    puts "Deleting generated directories"
+    ``
 end
 
 desc "Backs up all the src files by calling backup.rb"
 task :bkp do
-    `ruby backup.rb rb md json html rhtml`
+    `ruby #{SCRIPT_PATH}/backup.rb rb md json html rhtml`
     puts "all backup"
 end
 
@@ -43,7 +51,6 @@ task :mvgen do
     end
 
     check_dir_exist(NOTES_PATH, true)
-
 
 end
 
