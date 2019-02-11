@@ -1,8 +1,8 @@
 # tttenvtools
 My environment setup tools
 
-Consists of a web page manually generated using erb templates were is collected all the links and documents needed daily.
-Ideally using Sinatra is the main goal but since the simplicity of the page it make sense not to use a web server for the moment. All the pages are statically generated.
-Some sections are generated based on information in a _json_ file.
+Consists of a static web page, generated using _erb_ and _rhtml_ templates. These pages are collected all the links and documents needed in daily basis.
 
-The templates and json files are not part of this repository due to confidentiality.
+Ideally the pages would be dynamically generated with _Sinatra_, however due to the simplicity of the pages it make sense to leave that feature for future extensions.
+
+The source of the information that seeds the templates is a _JSON_ file. The _rhtml_ templates and _JSCON_ files are not part of this repository due to confidentiality.
